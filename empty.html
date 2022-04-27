@@ -23,6 +23,7 @@
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
 
+	//Taste gedrückt
     function keyDownHandler(e) {
         if(e.code  == "ArrowRight") {
             rightPressed = true;
@@ -37,6 +38,7 @@
             downPressed = true;
         }
     }
+	//Taste losgelassen
     function keyUpHandler(e) {
         if(e.code == 'ArrowRight') {
             rightPressed = false;
@@ -52,7 +54,8 @@
         }
     }
 
-    function drawBall() {
+	//Zeichnen der Schlange
+    function drawSnake() {
         ctx.beginPath();
         ctx.arc(10, 10, size, 0, Math.PI*2);
         ctx.fillStyle = "#0095DD";
@@ -60,13 +63,16 @@
         ctx.closePath();
     }
 
+	//Alles zeichen
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBall();
+        drawSnake();
 
+		//Immer wieder alles Zeichnen -> 60fps, d.h. draw wird alle 16ms aufgerufen.
         requestAnimationFrame(draw);
     }
 
+	//Zeichnen erstmalig aufrufen
     draw();
 </script>
 
