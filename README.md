@@ -14,3 +14,6 @@ https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_J
   - Draw a rect instead of a circle.
   - Possibility to move the rect arround via the keyboard, so every key press should move the rect on block (so not only one pixle, use the size of the rect)
   - As next task, stor the move direction, and move the rect in the stored direction until it hits a wall, or a other direction is pressed.
+  - Create a Fruit at a Random Place and wait till snake eats it
+  - Store the Snake parts in an Array so the Sake could Grow
+  - When Snake eats fruit, grow the snake 
