@@ -2,7 +2,7 @@
 Simple Snake Sample for our Bogys
 
 
-Breakout Smaple from:
+Breakout Sample from:
 https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
 
 1.) Use empty.html as a Basis
