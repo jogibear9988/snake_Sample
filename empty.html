@@ -36,15 +36,20 @@
         var fruchtY = 0;
 
 
-        var schlangeArrayX = [Math.round(maxX / 2)];
+        var schlangeArrayX = [Math.round(maxX / 1.5)];
         var schlangeArrayY = [Math.round(maxY / 2)];
 
+        var schlangeArrayX2 = [Math.round(maxX / 3)];
+        var schlangeArrayY2 = [Math.round(maxY / 2)];
+
+
         var highscore = 0;
+        var highscore2 = 0;
 
         var up2Pressed = false;
         var down2Pressed = false;
         var left2Pressed = false;
-        var righ2Pressed = false;
+        var right2Pressed = false;
 
         var rightPressed = false;
         var leftPressed = false;
@@ -55,9 +60,13 @@
         var gameOver = false;
 
         var richtung = -1; //0 = rechts, 1 = links, 2 = oben, 3 = unten
+        var richtung2 = -1; //0 = rechts, 1 = links, 2 = oben, 3 = unten
 
         var timer = 0;
         var speed = 10;
+
+        var timer2 = 0;
+        var speed2 = 10;
 
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
@@ -107,7 +116,7 @@
                 downPressed = false;
             }
             else if (e.code == 'KeyD') {
-                righ2tPressed = false;
+                right2Pressed = false;
             }
             else if (e.code == 'KeyA') {
                 left2Pressed = false;
@@ -131,6 +140,14 @@
             }
         }
 
+        function moveSnake2() {
+            for (var i = 0; i < schlangeArrayX2.length - 1; i++) {
+                schlangeArrayX2[i] = schlangeArrayX2[i + 1];
+                schlangeArrayY2[i] = schlangeArrayY2[i + 1];
+            }
+        }
+
+
 
         //Zeichnen der Schlange
         function drawSnake() {
@@ -146,12 +163,25 @@
             }
         }
 
+        function drawSnake2() {
+            for (var i = 0; i < schlangeArrayX2.length; i++) {
+                var posX2 = schlangeArrayX2[i];
+                var posY2 = schlangeArrayY2[i];
+
+                ctx.beginPath();
+                ctx.rect(posX2 * size, posY2 * size, size, size);
+                ctx.fillStyle = "#00aa00";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
         function neueFruchtPostionBerechnen() {
             fruchtX = Math.round((Math.random() * (maxX - 0)) + 0);
             fruchtY = Math.round((Math.random() * (maxY - 0)) + 0);
             for (var i = 0; i < schlangeArrayX.length - 1; i++) {
                 if (schlangeArrayX[i] == fruchtX && schlangeArrayY[i] == fruchtY) {
-                    neueFruchtPostionBerechnen ();
+                    neueFruchtPostionBerechnen();
                 }
             }
 
@@ -168,7 +198,12 @@
 
         function drawHighscore() {
             ctx.font = "20px Verdana";
-            ctx.fillText(highscore, 235, 40);
+            ctx.fillText(highscore, 310, 40);
+        }
+
+        function drawHighscore2() {
+            ctx.font = "20px Verdana";
+            ctx.fillText(highscore2, 170, 40);
         }
 
         function checkSnakeCollidesWithItself() {
@@ -180,15 +215,39 @@
                     gameOver = true;
                 }
             }
+            for (var i = 0; i < schlangeArrayX2.length; i++) {
+                if (schlangeArrayX2[i] == posX && schlangeArrayY2[i] == posY) {
+                    gameOver = true;
+                }
+            }
+        }
+
+        function checkSnakeCollidesWithItself2() {
+            var posX2 = schlangeArrayX2[schlangeArrayX2.length - 1];
+            var posY2 = schlangeArrayY2[schlangeArrayY2.length - 1];
+
+            for (var i = 0; i < schlangeArrayX2.length - 1; i++) {
+                if (schlangeArrayX2[i] == posX2 && schlangeArrayY2[i] == posY2) {
+                    gameOver = true;
+                }
+            }
+            for (var i = 0; i < schlangeArrayX.length;  i++) {
+                if (schlangeArrayX[i] == posX2 && schlangeArrayY[i] == posY2) {
+                    gameOver = true;
+                }
+            }
         }
 
         function drawgameover() {
             if (gameOver == true) {
                 ctx.font = "40px Verdana";
                 ctx.fillText("Game over", 150, 300);
-                schlangeArrayX = [Math.round(maxX / 2)];
+                schlangeArrayX = [Math.round(maxX / 1.5)];
                 schlangeArrayY = [Math.round(maxY / 2)];
                 richtung = -1
+                schlangeArrayX2 = [Math.round(maxX / 3)];
+                schlangeArrayY2 = [Math.round(maxY / 2)];
+                richtung2 = -1
             }
         }
 
@@ -200,9 +259,11 @@
             //Löschen der Zeichnfläche
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawSnake();
+            drawSnake2();
             drawFruit();
             checkSnakeCollidesWithItself();
             drawHighscore();
+            drawHighscore2();
             drawgameover();
 
             timer = timer + 1;
@@ -210,8 +271,16 @@
                 timer = 0;
             }
 
+            timer2 = timer2 + 1;
+            if (timer2 > speed2) {
+                timer2 = 0;
+            }
+
             var schlangeX = schlangeArrayX[schlangeArrayX.length - 1];
             var schlangeY = schlangeArrayY[schlangeArrayY.length - 1];
+
+            var schlangeX2 = schlangeArrayX2[schlangeArrayX2.length - 1];
+            var schlangeY2 = schlangeArrayY2[schlangeArrayY2.length - 1];
 
             if (richtung == 0 && timer == 0) {
                 moveSnake();
@@ -229,6 +298,25 @@
             else if (richtung == 3 && timer == 0) {
                 moveSnake();
                 schlangeY = schlangeY + 1;
+            }
+
+
+            if (richtung2 == 0 && timer2 == 0) {
+                moveSnake2();
+                schlangeX2 = schlangeX2 + 1;
+
+            }
+            else if (richtung2 == 1 && timer2 == 0) {
+                moveSnake2();
+                schlangeX2 = schlangeX2 - 1;
+            }
+            else if (richtung2 == 2 && timer2 == 0) {
+                moveSnake2();
+                schlangeY2 = schlangeY2 - 1;
+            }
+            else if (richtung2 == 3 && timer2 == 0) {
+                moveSnake2();
+                schlangeY2 = schlangeY2 + 1;
             }
 
             // Grenzüberwachung
@@ -249,6 +337,24 @@
                 gameOver = true;
             }
 
+            // Grenzüberwachung2
+            if (schlangeX2 > maxX) {
+                schlangeX2 = maxX;
+                gameOver = true;
+            }
+            if (schlangeX2 < minX) {
+                schlangeX2 = minX;
+                gameOver = true;
+            }
+            if (schlangeY2 > maxY) {
+                schlangeY2 = maxY;
+                gameOver = true;
+            }
+            if (schlangeY2 < minY) {
+                schlangeY2 = minY;
+                gameOver = true;
+            }
+
 
             if (rightPressed && richtung != 1 && gameOver != true) {
                 richtung = 0;
@@ -263,6 +369,19 @@
                 richtung = 3;
             }
 
+            if (right2Pressed && richtung2 != 1 && gameOver != true) {
+                richtung2 = 0;
+            }
+            else if (left2Pressed && richtung2 != 0 && gameOver != true) {
+                richtung2 = 1;
+            }
+            else if (up2Pressed && richtung2 != 3 && gameOver != true) {
+                richtung2 = 2;
+            }
+            else if (down2Pressed && richtung2 != 2 && gameOver != true) {
+                richtung2 = 3;
+            }
+
             if (schlangeX == fruchtX && schlangeY == fruchtY) {
                 highscore = highscore + 1
                 neueFruchtPostionBerechnen();
@@ -271,16 +390,31 @@
                 schlangeArrayY.push(schlangeY);
             }
 
+            if (schlangeX2 == fruchtX && schlangeY2 == fruchtY) {
+                highscore2 = highscore2 + 1
+                neueFruchtPostionBerechnen();
+
+                schlangeArrayX2.push(schlangeX2);
+                schlangeArrayY2.push(schlangeY2);
+            }
+
             if (spacePressed) {
                 highscore = 0;
+                highscore2 = 0;
                 gameOver = false;
-                schlangeX = Math.round(maxX / 2);
+                schlangeX = Math.round(maxX / 1.5);
                 schlangeY = Math.round(maxY / 2);
+                schlangeX2 = Math.round(maxX / 3);
+                schlangeY2 = Math.round(maxY / 2);
                 richtung = -1;
+                richtung2 = -1;
             }
 
             schlangeArrayX[schlangeArrayX.length - 1] = schlangeX
             schlangeArrayY[schlangeArrayY.length - 1] = schlangeY
+
+            schlangeArrayX2[schlangeArrayX2.length - 1] = schlangeX2
+            schlangeArrayY2[schlangeArrayY2.length - 1] = schlangeY2
 
             //Immer wieder alles Zeichnen -> 60fps, d.h. draw wird alle 16ms aufgerufen.
             requestAnimationFrame(draw);
