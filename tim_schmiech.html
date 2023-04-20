@@ -35,8 +35,7 @@
         var fruchtX = 0;
         var fruchtY = 0;
 
-
-        var schlangeArrayX = [Math.round(maxX / 1.5)];
+        var schlangeArrayX = [Math.round(maxY / 1)];
         var schlangeArrayY = [Math.round(maxY / 2)];
 
         var schlangeArrayX2 = [Math.round(maxX / 3)];
@@ -145,6 +144,7 @@
             }
         }
 
+
         function moveSnake2() {
             for (var i = 0; i < schlangeArrayX2.length - 1; i++) {
                 schlangeArrayX2[i] = schlangeArrayX2[i + 1];
@@ -246,12 +246,14 @@
             ctx.font = "20px Verdana";
             ctx.fillStyle = "#109DDD";
             ctx.fillText(highscore, 310, 40);
+
         }
 
         function drawHighscore2() {
             ctx.font = "20px Verdana";
             ctx.fillStyle = "#00aa00";
             ctx.fillText(highscore2, 170, 40);
+
         }
 
         function checkSnakeCollidesWithItself() {
@@ -441,19 +443,23 @@
             }
 
             if (schlangeX == fruchtX && schlangeY == fruchtY) {
-                highscore = highscore + 1
+                highscore = highscore + 1;
                 neueFruchtPostionBerechnen();
-
+                if (highscore % 3 == 0) {
+                    speed = speed - 1;
+                }
                 schlangeArrayX.push(schlangeX);
                 schlangeArrayY.push(schlangeY);
             }
 
             if (schlangeX2 == fruchtX && schlangeY2 == fruchtY) {
-                highscore2 = highscore2 + 1
+                highscore2 = highscore2 + 1;
                 neueFruchtPostionBerechnen();
-
                 schlangeArrayX2.push(schlangeX2);
                 schlangeArrayY2.push(schlangeY2);
+                if (highscore2 % 3 == 0) {
+                    speed2 = speed2 - 1;
+                }
             }
 
             if (spacePressed) {
@@ -467,6 +473,8 @@
                 richtung = -1;
                 richtung2 = -1;
             }
+
+
 
             schlangeArrayX[schlangeArrayX.length - 1] = schlangeX
             schlangeArrayY[schlangeArrayY.length - 1] = schlangeY
