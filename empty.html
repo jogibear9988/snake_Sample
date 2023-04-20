@@ -38,9 +38,13 @@
 
         var schlangeArrayX = [Math.round(maxX / 2)];
         var schlangeArrayY = [Math.round(maxY / 2)];
-       
 
         var highscore = 0;
+
+        var up2Pressed = false;
+        var down2Pressed = false;
+        var left2Pressed = false;
+        var righ2Pressed = false;
 
         var rightPressed = false;
         var leftPressed = false;
@@ -72,6 +76,18 @@
             else if (e.code == 'ArrowDown') {
                 downPressed = true;
             }
+            else if (e.code == "KeyD") {
+                right2Pressed = true;
+            }
+            else if (e.code == 'KeyA') {
+                left2Pressed = true;
+            }
+            else if (e.code == 'KeyW') {
+                up2Pressed = true;
+            }
+            else if (e.code == 'KeyS') {
+                down2Pressed = true;
+            }
             else if (e.code == 'Space') {
                 spacePressed = true;
             }
@@ -89,6 +105,18 @@
             }
             else if (e.code == 'ArrowDown') {
                 downPressed = false;
+            }
+            else if (e.code == 'KeyD') {
+                righ2tPressed = false;
+            }
+            else if (e.code == 'KeyA') {
+                left2Pressed = false;
+            }
+            else if (e.code == 'KeyW') {
+                up2Pressed = false;
+            }
+            else if (e.code == 'KeyS') {
+                down2Pressed = false;
             }
             else if (e.code == 'Space') {
                 spacePressed = false;
@@ -121,6 +149,12 @@
         function neueFruchtPostionBerechnen() {
             fruchtX = Math.round((Math.random() * (maxX - 0)) + 0);
             fruchtY = Math.round((Math.random() * (maxY - 0)) + 0);
+            for (var i = 0; i < schlangeArrayX.length - 1; i++) {
+                if (schlangeArrayX[i] == fruchtX && schlangeArrayY[i] == fruchtY) {
+                    neueFruchtPostionBerechnen ();
+                }
+            }
+
         }
 
         //Zeichnen der Frucht
@@ -135,6 +169,17 @@
         function drawHighscore() {
             ctx.font = "20px Verdana";
             ctx.fillText(highscore, 235, 40);
+        }
+
+        function checkSnakeCollidesWithItself() {
+            var posX = schlangeArrayX[schlangeArrayX.length - 1];
+            var posY = schlangeArrayY[schlangeArrayY.length - 1];
+
+            for (var i = 0; i < schlangeArrayX.length - 1; i++) {
+                if (schlangeArrayX[i] == posX && schlangeArrayY[i] == posY) {
+                    gameOver = true;
+                }
+            }
         }
 
         function drawgameover() {
@@ -156,6 +201,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawSnake();
             drawFruit();
+            checkSnakeCollidesWithItself();
             drawHighscore();
             drawgameover();
 
@@ -170,7 +216,7 @@
             if (richtung == 0 && timer == 0) {
                 moveSnake();
                 schlangeX = schlangeX + 1;
-                
+
             }
             else if (richtung == 1 && timer == 0) {
                 moveSnake();
@@ -221,9 +267,8 @@
                 highscore = highscore + 1
                 neueFruchtPostionBerechnen();
 
-
-                schlangeArrayX.push(schlangeX) 
-                schlangeArrayY.push(schlangeY)
+                schlangeArrayX.push(schlangeX);
+                schlangeArrayY.push(schlangeY);
             }
 
             if (spacePressed) {
