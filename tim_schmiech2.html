@@ -62,7 +62,7 @@
 
 
         document.addEventListener("keydown", keyDownHandler, false);
-        document.addEventListener("keyup", keyUpHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false); 
         window.addEventListener("mousemove", mousemovehandler, false);
 
         //Taste gedrückt
@@ -173,7 +173,7 @@
             }
 
             var topPaddle = maxY - heightPaddle;
-            if (ballX > xPositionPaddle && ballX < xPositionPaddle + lengthPaddle  && ballY > topPaddle) {
+            if (ballX > xPositionPaddle && ballX < xPositionPaddle + lengthPaddle && ballY > topPaddle) {
                 speedX = speedX * -1;
                 speedY = speedY * -1;
             }
@@ -181,6 +181,10 @@
             if (ballY > maxY) {
                 gameOver = true;
                 drawgameover();
+                ballX = 240;
+                ballY = 160; 
+                speedX = 0;
+                speedY = 0;
             }
         }
 
@@ -197,8 +201,12 @@
         function reset() {
             if (spacePressed) {
                 gameOver = false;
-            }
-        }
+                ballX = 240;
+                ballY = 160;
+                speedX = 1;
+                speedY = 1; 
+            } 
+        }  
 
 
 
