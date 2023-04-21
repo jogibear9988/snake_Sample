@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Simple Snake like Game</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            aaacursor: none;
+        }
+
+        canvas {
+            background: #eee;
+            display: block;
+            margin: 0 auto;
+
+        }
+    </style>
+</head>
+
+<body style="display: flex; justify-content: center; align-items: center; height: 100%;">
+
+    <canvas id="myCanvas" width="480" height="320"></canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var lengthPaddle = 60;
+        var heightPaddle = 15;
+        var size = 20;
+
+        var maxX = canvas.width;
+        var maxY = canvas.height;
+        var minX = 0;
+        var minY = 0;
+
+        var up2Pressed = false;
+        var down2Pressed = false;
+        var left2Pressed = false;
+        var right2Pressed = false;
+
+        var rightPressed = false;
+        var leftPressed = false;
+        var upPressed = false;
+        var downPressed = false;
+        var spacePressed = false;
+
+        var xPositionPaddle = 0;
+
+        var mousePositionX = 0;
+        var elementPosition = canvas.getBoundingClientRect();
+
+        var ballX = 240;
+        var ballY = 160;
+
+        speedX = 1;
+        speedY = 1;
+
+        var gameOver = false;
+
+
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+        window.addEventListener("mousemove", mousemovehandler, false);
+
+        //Taste gedrückt
+        function keyDownHandler(e) {
+            if (e.code == "ArrowRight") {
+                rightPressed = true;
+            }
+            else if (e.code == 'ArrowLeft') {
+                leftPressed = true;
+            }
+            else if (e.code == 'ArrowUp') {
+                upPressed = true;
+            }
+            else if (e.code == 'ArrowDown') {
+                downPressed = true;
+            }
+            else if (e.code == "KeyD") {
+                right2Pressed = true;
+            }
+            else if (e.code == 'KeyA') {
+                left2Pressed = true;
+            }
+            else if (e.code == 'KeyW') {
+                up2Pressed = true;
+            }
+            else if (e.code == 'KeyS') {
+                down2Pressed = true;
+            }
+            else if (e.code == 'Space') {
+                spacePressed = true;
+            }
+        }
+        //Taste losgelassen
+        function keyUpHandler(e) {
+            if (e.code == 'ArrowRight') {
+                rightPressed = false;
+            }
+            else if (e.code == 'ArrowLeft') {
+                leftPressed = false;
+            }
+            else if (e.code == 'ArrowUp') {
+                upPressed = false;
+            }
+            else if (e.code == 'ArrowDown') {
+                downPressed = false;
+            }
+            else if (e.code == 'KeyD') {
+                right2Pressed = false;
+            }
+            else if (e.code == 'KeyA') {
+                left2Pressed = false;
+            }
+            else if (e.code == 'KeyW') {
+                up2Pressed = false;
+            }
+            else if (e.code == 'KeyS') {
+                down2Pressed = false;
+            }
+            else if (e.code == 'Space') {
+                spacePressed = false;
+            }
+        }
+
+        function mousemovehandler(e) {
+            mousePositionX = e.clientX;
+
+        }
+
+        function drawPaddle() {
+
+            xPositionPaddle = mousePositionX - elementPosition.x - lengthPaddle / 2;
+
+            if (xPositionPaddle < minX) {
+                xPositionPaddle = minX;
+            }
+
+            if (xPositionPaddle > maxX - lengthPaddle) {
+                xPositionPaddle = maxX - lengthPaddle;
+            }
+
+            ctx.beginPath();
+            ctx.rect(xPositionPaddle, maxY - heightPaddle, lengthPaddle, heightPaddle);
+            ctx.fillStyle = "#109DDD";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawBall() {
+            ctx.beginPath();
+            ctx.fillStyle = "#ff5533";
+            ctx.arc(ballX, ballY, size / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function moveball() {
+
+            ballX = ballX + speedX;
+            ballY = ballY + speedY;
+
+
+            if (ballX > maxX || ballX < minX) {
+                speedX = speedX * -1;
+            }
+
+            if (ballY < minY) {
+                speedY = speedY * -1;
+            }
+
+            var topPaddle = maxY - heightPaddle;
+            if (ballX > xPositionPaddle && ballX < xPositionPaddle + lengthPaddle  && ballY > topPaddle) {
+                speedX = speedX * -1;
+                speedY = speedY * -1;
+            }
+
+            if (ballY > maxY) {
+                gameOver = true;
+                drawgameover();
+            }
+        }
+
+
+        function drawgameover() {
+            if (gameOver == true) {
+                ctx.font = "40px Verdana";
+                ctx.fillStyle = "#dd0000";
+                ctx.fillText("Game over", 150, 300);
+
+            }
+        }
+
+        function reset() {
+            if (spacePressed) {
+                gameOver = false;
+            }
+        }
+
+
+
+
+        //Alles zeichen
+        function draw() {
+            elementPosition = canvas.getBoundingClientRect();
+
+            //Löschen der Zeichnfläche
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPaddle();
+            drawBall();
+            moveball();
+            drawgameover();
+            reset();
+
+            console.log("mouse", mousePositionX)
+            console.log("element", elementPosition.x)
+
+            leftPressed = false;
+            rightPressed = false;
+            downPressed = false;
+            upPressed = false;
+
+
+            //Immer wieder alles Zeichnen -> 60fps, d.h. draw wird alle 16ms aufgerufen.
+            requestAnimationFrame(draw);
+        }
+
+        //Zeichnen erstmalig aufrufen
+        draw();
+
+    </script>
+
+</body>
+
+</html>
