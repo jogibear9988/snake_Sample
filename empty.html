@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <meta charset="utf-8" />
+    <title>Simple Snake like Game</title>
+    <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100%;">
+
+<canvas id="myCanvas" width="480" height="320"></canvas>
+
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var size = 10;
+
+    var rightPressed = false;
+    var leftPressed = false;
+	var upPressed = false;
+    var downPressed = false;
+    
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+
+	//Taste gedrückt
+    function keyDownHandler(e) {
+        if(e.code  == "ArrowRight") {
+            rightPressed = true;
+        }
+        else if(e.code == 'ArrowLeft') {
+            leftPressed = true;
+        }
+		else if(e.code == 'ArrowUp') {
+            upPressed = true;
+        }
+		else if(e.code == 'ArrowDown') {
+            downPressed = true;
+        }
+    }
+	//Taste losgelassen
+    function keyUpHandler(e) {
+        if(e.code == 'ArrowRight') {
+            rightPressed = false;
+        }
+        else if(e.code == 'ArrowLeft') {
+            leftPressed = false;
+        }
+		else if(e.code == 'ArrowUp') {
+            upPressed = false;
+        }
+		else if(e.code == 'ArrowDown') {
+            downPressed = false;
+        }
+    }
+
+	//Zeichnen der Schlange
+    function drawSnake() {
+        ctx.beginPath();
+        ctx.arc(10, 10, size, 0, Math.PI*2);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+	//Alles zeichen
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawSnake();
+
+		//Immer wieder alles Zeichnen -> 60fps, d.h. draw wird alle 16ms aufgerufen.
+        requestAnimationFrame(draw);
+    }
+
+	//Zeichnen erstmalig aufrufen
+    draw();
+</script>
+
+</body>
+</html>
