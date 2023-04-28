@@ -57,7 +57,7 @@
         var gameOver = false;
 
         var highscore = 0;
-
+        var highscore2 = 0;
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
 
@@ -202,13 +202,20 @@
             positionSnake2Y.push(positionFruitY)
             positionFruitX = Math.round(Math.random() * (19 - 0)) + 0;
             positionFruitY = Math.round(Math.random() * (12 - 0)) + 0;
-            highscore = highscore + 1
+            highscore2 = highscore2 + 1
+
         }
 
         function drawHighscore() {
             ctx.font = "18px serif";
-            ctx.fillStyle = "#DAA520";
-            ctx.fillText("Highscore: " + highscore, 3, 14);
+            ctx.fillStyle = "#0095DD";
+            ctx.fillText("Highscore: " + highscore, 370, 14);
+        }
+
+        function drawHighscore2() {
+            ctx.font = "18px serif";
+            ctx.fillStyle = "#9aCd32";
+            ctx.fillText("Highscore: " + highscore2, 2, 14);
         }
 
         function drawfruit() {
@@ -243,6 +250,7 @@
             drawSnake2();
             drawfruit();
             drawHighscore();
+            drawHighscore2()
             drawGameOver();
             if (spacePressed) {
                 spacepressReset()
