@@ -27,15 +27,19 @@
         var ctx = canvas.getContext("2d");
         var size = 12;
 
-        var positionSnakeX = [11];
+        var positionSnakeX = [13];
         var positionSnakeY = [8];
+
+        var positionSnake2X = [7];
+        var positionSnake2Y = [8];
 
         var positionFruitX = 5;
         var positionFruitY = 3;
 
         var direction = 0; // 1 = nach rechts, 2 = nach links, 3= nach oben, 4 = nach unten
+        var direction2 = 0;
         var lastDrawnDirection = 0; // 1 = nach rechts, 2 = nach links, 3= nach oben, 4 = nach unten
-
+        var lastDrawnDirection2
         var delay = 10;
         var cycle = 0;
 
@@ -44,6 +48,11 @@
         var upPressed = false;
         var downPressed = false;
         var spacePressed = false;
+
+        var up2Pressed = false;
+        var down2Pressed = false;
+        var left2Pressed = false;
+        var right2Pressed = false;
 
         var gameOver = false;
 
@@ -66,6 +75,18 @@
             else if (e.code == 'ArrowDown') {
                 downPressed = true;
             }
+            else if (e.code == "KeyD") {
+                right2Pressed = true;
+            }
+            else if (e.code == 'KeyA') {
+                left2Pressed = true;
+            }
+            else if (e.code == 'KeyW') {
+                up2Pressed = true;
+            }
+            else if (e.code == 'KeyS') {
+                down2Pressed = true;
+            }
             else if (e.code == 'Space') {
                 spacePressed = true;
             }
@@ -84,13 +105,25 @@
             else if (e.code == 'ArrowDown') {
                 downPressed = false;
             }
+            else if (e.code == 'KeyD') {
+                right2Pressed = false;
+            }
+            else if (e.code == 'KeyA') {
+                left2Pressed = false;
+            }
+            else if (e.code == 'KeyW') {
+                up2Pressed = false;
+            }
+            else if (e.code == 'KeyS') {
+                down2Pressed = false;
+            }
             else if (e.code == 'Space') {
                 spacePressed = false;
             }
         }
 
-         //code from https://tech.saigonist.com/b/code/how-detect-swipe-touch-event-mobile-browsers-javascript.html
-         function handySwipe() {
+        //code from https://tech.saigonist.com/b/code/how-detect-swipe-touch-event-mobile-browsers-javascript.html
+        function handySwipe() {
             document.addEventListener('touchstart', handleTouchStart, false);
             document.addEventListener('touchmove', handleTouchMove, false);
 
@@ -144,6 +177,17 @@
                 ctx.closePath();
             }
         }
+        function drawSnake2() {
+            for (var i2 = 0; i2 < positionSnake2X.length; i2 = i2 + 1) {
+                var x2 = positionSnake2X[i2]
+                var y2 = positionSnake2Y[i2]
+                ctx.beginPath();
+                ctx.arc(x2 * size * 2 + size, y2 * size * 2 + size, size, 0, Math.PI * 2);
+                ctx.fillStyle = "#9aCd32";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
 
         function newfruitPosition() {
             positionSnakeX.push(positionFruitX)
@@ -151,8 +195,16 @@
             positionFruitX = Math.round(Math.random() * (19 - 0)) + 0;
             positionFruitY = Math.round(Math.random() * (12 - 0)) + 0;
             highscore = highscore + 1
-
         }
+
+        function newfruitPosition2() {
+            positionSnake2X.push(positionFruitX)
+            positionSnake2Y.push(positionFruitY)
+            positionFruitX = Math.round(Math.random() * (19 - 0)) + 0;
+            positionFruitY = Math.round(Math.random() * (12 - 0)) + 0;
+            highscore = highscore + 1
+        }
+
         function drawHighscore() {
             ctx.font = "18px serif";
             ctx.fillStyle = "#DAA520";
@@ -176,15 +228,19 @@
         function spacepressReset() {
             newfruitPosition()
             direction = 0;
+            direction2 = 0;
             lastDrawnDirection = 0;
             highscore = 0;
             gameOver = false;
-            positionSnakeX = [11];
+            positionSnakeX = [13];
             positionSnakeY = [8];
+            positionSnake2X = [7];
+            positionSnake2Y = [8];
         }
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawSnake();
+            drawSnake2();
             drawfruit();
             drawHighscore();
             drawGameOver();
@@ -193,6 +249,7 @@
                 spacePressed = false;
             }
 
+            //Schlange 1
             var snakeHeadX = positionSnakeX[positionSnakeX.length - 1]
             var snakeHeadY = positionSnakeY[positionSnakeX.length - 1]
 
@@ -213,9 +270,35 @@
                 downPressed = false;
             }
 
+            //Schlange 2
+            var snakeHead2X = positionSnake2X[positionSnake2X.length - 1]
+            var snakeHead2Y = positionSnake2Y[positionSnake2X.length - 1]
+
+            if (left2Pressed && (lastDrawnDirection2 == 3 || lastDrawnDirection2 == 4 || lastDrawnDirection2 == 0)) {
+                direction2 = 2
+                left2Pressed = false;
+            }
+            else if (right2Pressed && (lastDrawnDirection2 == 3 || lastDrawnDirection2 == 4 || lastDrawnDirection2 == 0)) {
+                direction2 = 1
+                right2Pressed = false;
+            }
+            else if (up2Pressed && (lastDrawnDirection2 == 1 || lastDrawnDirection2 == 2 || lastDrawnDirection2 == 0)) {
+                direction2 = 4
+                up2Pressed = false;
+            }
+            else if (down2Pressed && (lastDrawnDirection2 == 1 || lastDrawnDirection2 == 2 || lastDrawnDirection2 == 0)) {
+                direction2 = 3
+                down2Pressed = false;
+            }
+
+
             if (gameOver == false) {
 
                 if (snakeHeadX < 0 || snakeHeadX > 19 || snakeHeadY < 0 || snakeHeadY > 12) {
+                    gameOver = true
+                }
+
+                if (snakeHead2X < 0 || snakeHead2X > 19 || snakeHead2Y < 0 || snakeHead2Y > 12) {
                     gameOver = true
                 }
 
@@ -246,7 +329,14 @@
 
                             if (currX == snakeHeadX && currY == snakeHeadY)
                                 gameOver = true
+                        }
 
+                        for (var i2 = 0; i2 < positionSnake2X.length; i2 = i2 + 1) {
+                            var curr2X = positionSnake2X[i2]
+                            var curr2Y = positionSnake2Y[i2]
+
+                            if (curr2X == snakeHeadX && curr2Y == snakeHeadY)
+                                gameOver = true
                         }
 
 
@@ -257,12 +347,60 @@
                         positionSnakeX[positionSnakeX.length - 1] = snakeHeadX;
                         positionSnakeY[positionSnakeY.length - 1] = snakeHeadY;
                     }
+
+
+                    lastDrawnDirection2 = direction2;
+
+                    if (direction2 == 1) { // nach rechts
+                        snakeHead2X = snakeHead2X + 1;
+                    }
+                    else if (direction2 == 2) { // nach links
+                        snakeHead2X = snakeHead2X - 1;
+                    }
+                    else if (direction2 == 3) { // nach oben
+                        snakeHead2Y = snakeHead2Y + 1;
+                    }
+                    else if (direction2 == 4) { // nach unten 
+                        snakeHead2Y = snakeHead2Y - 1;
+                    }
+
+                    if (direction2 != 0) {
+
+                        for (var i2 = 1; i2 < positionSnake2X.length; i2 = i2 + 1) {
+                            var curr2X = positionSnake2X[i2]
+                            var curr2Y = positionSnake2Y[i2]
+
+                            if (curr2X == snakeHead2X && curr2Y == snakeHead2Y)
+                                gameOver = true
+                        }
+
+                        for (var i = 0; i < positionSnakeX.length; i = i + 1) {
+                            var currX = positionSnakeX[i]
+                            var currY = positionSnakeY[i]
+
+                            if (currX == snakeHead2X && currY == snakeHead2Y)
+                                gameOver = true
+                        }
+
+                        for (var i2 = 1; i2 < positionSnake2X.length; i2 = i2 + 1) {
+                            positionSnake2X[i2 - 1] = positionSnake2X[i2]
+                            positionSnake2Y[i2 - 1] = positionSnake2Y[i2]
+                        }
+                        positionSnake2X[positionSnake2X.length - 1] = snakeHead2X;
+                        positionSnake2Y[positionSnake2Y.length - 1] = snakeHead2Y;
+                    }
                 }
 
                 if (snakeHeadX == positionFruitX && snakeHeadY == positionFruitY) {
                     newfruitPosition();
                 }
+
+                if (snakeHead2X == positionFruitX && snakeHead2Y == positionFruitY) {
+                    newfruitPosition2();
+                }
             }
+
+
             //Immer wieder alles Zeichnen -> 60fps, d.h. draw wird alle 16ms aufgerufen.
             requestAnimationFrame(draw);
         }
